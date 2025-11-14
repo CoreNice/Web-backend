@@ -16,10 +16,6 @@ return [
     |
     */
 
-    'driver' => 'mongodb',
-    'dsn' => env('DB_DSN'),
-
-
     'default' => env('DB_CONNECTION', 'sqlite'),
 
     /*
@@ -40,21 +36,6 @@ return [
             'dsn' => env('MONGO_URI'),
             'database' => env('MONGO_DB_DATABASE'),
         ],
-
-
-        // 'mongodb' => [
-        //     'driver' => 'mongodb',
-        //     'host' => env('MONGO_DB_HOST', '127.0.0.1'),
-        //     'port' => env('MONGO_DB_PORT', 27017),
-        //     'database' => env('MONGO_DB_DATABASE'),
-        //     'username' => env('MONGO_DB_USERNAME'),
-        //     'password' => env('MONGO_DB_PASSWORD'),
-        //     'options' => [
-        //         'appname' => 'LaravelApp',
-        //         'ssl' => true,
-        //     ],
-        // ],
-
 
         'sqlite' => [
             'driver' => 'sqlite',
