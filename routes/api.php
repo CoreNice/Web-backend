@@ -13,6 +13,10 @@ use App\Http\Controllers\PasswordResetController;
 Route::get('/health/db', [HealthController::class, 'database']);
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/product/{id}', [ProductController::class, 'show']);
+Route::get('/health', function () {
+    return response()->json(['status' => 'OK']);
+});
+
 // Auth
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -21,21 +25,20 @@ Route::post('/auth/verify-reset-token', [PasswordResetController::class, 'verify
 Route::post('/auth/reset-password', [PasswordResetController::class, 'reset']);
 
 Route::middleware('jwt.verify')->group(function () {
-    
+
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    
+
     // Cart
     Route::get('/cart', [CartController::class, 'get']);
     Route::post('/cart', [CartController::class, 'update']);
     Route::delete('/cart', [CartController::class, 'clear']);
-    
+
     // Order
     Route::post('/checkout', [OrderController::class, 'create']);
-    
+
     // Admin
     Route::post('/product', [ProductController::class, 'store']);
     Route::put('/product/{id}', [ProductController::class, 'update']);
     Route::delete('/product/{id}', [ProductController::class, 'destroy']);
 });
-
