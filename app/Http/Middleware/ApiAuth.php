@@ -10,7 +10,6 @@ class ApiAuth
     public function handle($request, Closure $next)
     {
         $auth = $request->header('Authorization');
-
         if (!$auth || !str_starts_with($auth, 'Bearer ')) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
@@ -22,7 +21,10 @@ class ApiAuth
             return response()->json(['message' => 'Invalid token'], 401);
         }
 
-        $request->merge(['auth_user' => $user]);
+        // injeksikan user ke request
+        $request->request->set('auth_user', $user);
+        // optional set user to $request->user() as well:
+        $request->setUserResolver(fn() => $user);
 
         return $next($request);
     }

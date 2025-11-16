@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\ApiAuth;
+use App\Http\Middleware\EnsureAdmin;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,6 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // --- DAFTAR ROUTE MIDDLEWARE (pengganti Kernel.php) ---
         $middleware->alias([
             'auth.api' => ApiAuth::class,
+            'admin'    => EnsureAdmin::class,
+
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

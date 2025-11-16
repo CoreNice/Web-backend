@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use MongoDB\Laravel\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -11,10 +12,44 @@ class Product extends Model
 
     protected $fillable = [
         'name',
-        'price',
-        'image',
+        'price',       // number (decimal/integer)
         'description',
-        'stock',
-        'category'
+        'image',       // path di storage, mis: 'products/abc.jpg'
+        'image_url',   // optional cached public url
+        'created_at',
+        'updated_at',
     ];
+
+    // Cast price to int/float if you want
+    protected $casts = [
+        'price' => 'float',
+    ];
+
+    // Helper untuk mengembalikan public url (bila belum di-set)
+    public function getImageUrlAttribute($value)
+    {
+        if (!empty($value)) {
+            // jika sudah absolute url, kembalikan langsung
+            if (str_starts_with($value, 'http')) {
+                return $value;
+            }
+            return url(\Illuminate\Support\Facades\Storage::url($value));
+        }
+        return null;
+    }
+
+    // Jika butuh slug:
+    public static function booted()
+    {
+        static::creating(function ($model) {
+            if (!$model->created_at) {
+                $model->created_at = now();
+            }
+            $model->updated_at = now();
+        });
+
+        static::updating(function ($model) {
+            $model->updated_at = now();
+        });
+    }
 }
