@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -13,71 +12,63 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|min:3|max:40',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
+            'name'     => 'required|min:3|max:40',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => strtolower($request->email),
+            'name'     => $request->name,
+            'email'    => strtolower($request->email),
             'password' => Hash::make($request->password),
-            'role' => 'user'
+            'role'     => 'user',
+            'api_tokens' => []
         ]);
 
         return response()->json([
             'message' => 'Register success',
-            'user' => $user
-        ], 201);
+            'user'    => $user
+        ]);
     }
 
     // LOGIN
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            'email'    => 'required|email',
+            'password' => 'required'
         ]);
 
         $user = User::where('email', strtolower($request->email))->first();
 
-        if (!$user) {
-            return response()->json(['message' => 'Akun belum terdaftar'], 404);
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        if (!Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Email atau password salah'], 401);
-        }
-
-        // Generate JWT token
-        $token = JWTAuth::fromUser($user);
+        $token = $user->generateApiToken();
 
         return response()->json([
-            'token' => $token,
-            'type' => 'bearer',
-            'user' => $user
+            'message' => 'Login success',
+            'token'   => $token,
+            'user'    => $user
         ]);
     }
 
-    // GET AUTH USER
+    // ME
     public function me(Request $request)
     {
-        try {
-            $user = JWTAuth::parseToken()->authenticate();
-            return response()->json($user);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
+        return response()->json($request->auth_user);
     }
 
     // LOGOUT
-    public function logout()
+    public function logout(Request $request)
     {
-        try {
-            JWTAuth::invalidate(JWTAuth::getToken());
-            return response()->json(['message' => 'Logout success']);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to logout'], 500);
-        }
+        $user = $request->auth_user;
+        $auth = $request->header('Authorization');
+        $token = substr($auth, 7);
+
+        $user->revokeToken($token);
+
+        return response()->json(['message' => 'Logout success']);
     }
 }

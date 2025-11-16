@@ -1,4 +1,18 @@
-protected $routeMiddleware = [
-    // ...
-    'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
-];
+<?php
+
+namespace App\Http;
+
+use Illuminate\Foundation\Http\Kernel as HttpKernel;
+
+class Kernel extends HttpKernel
+{
+    protected $middlewareGroups = [
+        'api' => [
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+    ];
+
+    protected $routeMiddleware = [
+        'auth.api' => \App\Http\Middleware\ApiAuth::class,
+    ];
+}

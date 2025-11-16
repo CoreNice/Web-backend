@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use MongoDB\Laravel\Auth\User as Authenticatable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable
 {
     use Notifiable;
 
@@ -17,19 +17,36 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        'role', // admin | user
+        'role',
+        'api_tokens'
     ];
 
-    protected $hidden = ['password'];
+    protected $hidden = ['password', 'api_tokens'];
 
-    // JWTSubject
-    public function getJWTIdentifier()
+    // Generate API Token
+    public function generateApiToken()
     {
-        return $this->getKey();
+        $token = Str::random(64);
+
+        $tokens = $this->api_tokens ?? [];
+        $tokens[] = $token;
+
+        $this->api_tokens = $tokens;
+        $this->save();
+
+        return $token;
     }
 
-    public function getJWTCustomClaims(): array
+    // Revoke current token
+    public function revokeToken($token)
     {
-        return [];
+        $tokens = $this->api_tokens ?? [];
+        $this->api_tokens = array_values(array_filter($tokens, fn($t) => $t !== $token));
+        $this->save();
+    }
+
+    public static function findByToken($token)
+    {
+        return self::where('api_tokens', $token)->first();
     }
 }
