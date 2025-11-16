@@ -32,26 +32,21 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $user = User::where('email', strtolower($request->email))->first();
 
-        if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['message' => 'Invalid login'], 401);
+        if (!$user) {
+            return response()->json(['message' => 'Akun belum terdaftar'], 404);
         }
+
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Email atau password salah'], 401);
+        }
+
+        $token = JWTAuth::fromUser($user);
 
         return response()->json([
             'token' => $token,
-            'type' => 'bearer',
-        ]);
-    }
-
-    public function me()
-    {
-        return response()->json(JWTAuth::user());
-    }
-
-    public function logout()
-    {
-        JWTAuth::invalidate(JWTAuth::getToken());
-        return response()->json(['message' => 'Logout success']);
+            'type' => 'bearer'
+        ], 200);
     }
 }
