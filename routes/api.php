@@ -13,6 +13,7 @@ use App\Http\Controllers\HealthController;
 Route::prefix('v1')->group(function () {
     Route::get('/mongodb', [HealthController::class, 'database']);
     Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/registerAdmin', [AuthController::class, 'registerAdmin']);
     Route::post('/login',    [AuthController::class, 'login']);
     Route::get('/products', [\App\Http\Controllers\ProductController::class, 'index']);
     Route::middleware('auth.api')->group(function () {

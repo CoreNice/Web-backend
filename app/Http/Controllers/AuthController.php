@@ -12,9 +12,10 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name'     => 'required|min:3|max:40',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
+            'name'                  => 'required|min:3|max:40',
+            'email'                 => 'required|email|unique:users,email',
+            'password'              => 'required|min:6',
+            'password_confirmation' => 'required|same:password',
         ]);
 
         $user = User::create([
@@ -27,6 +28,30 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Register success',
+            'user'    => $user
+        ]);
+    }
+
+    // REGISTER ADMIN
+    public function registerAdmin(Request $request)
+    {
+        $request->validate([
+            'name'                  => 'required|min:3|max:40',
+            'email'                 => 'required|email|unique:users,email',
+            'password'              => 'required|min:6',
+            'password_confirmation' => 'required|same:password',
+        ]);
+
+        $user = User::create([
+            'name'     => $request->name,
+            'email'    => strtolower($request->email),
+            'password' => Hash::make($request->password),
+            'role'     => 'admin',
+            'api_tokens' => []
+        ]);
+
+        return response()->json([
+            'message' => 'Admin register success',
             'user'    => $user
         ]);
     }
