@@ -9,29 +9,27 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    // REGISTER
     public function register(Request $request)
     {
         $request->validate([
-            'name'     => 'required',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|min:6'
+            'name'                  => 'required|string|min:3|max:40',
+            'email'                 => 'required|email|unique:users,email',
+            'password'              => 'required|min:6|confirmed',
         ]);
 
         $user = User::create([
-            'name'  => $request->name,
-            'email' => strtolower($request->email),
+            'name'     => $request->name,
+            'email'    => strtolower($request->email),
             'password' => Hash::make($request->password),
-            'role' => 'user'
+            'role'     => 'user'
         ]);
 
         return response()->json([
             'message' => 'Register success',
-            'user' => $user
-        ]);
+            'user'    => $user
+        ], 201);
     }
 
-    // LOGIN
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -42,21 +40,18 @@ class AuthController extends Controller
 
         return response()->json([
             'token' => $token,
-            'type' => 'bearer'
+            'type' => 'bearer',
         ]);
     }
 
-    // GET AUTH USER
-    public function me(Request $request)
+    public function me()
     {
         return response()->json(JWTAuth::user());
     }
 
-    // LOGOUT
     public function logout()
     {
-        JWTAuth::invalidate();
-
+        JWTAuth::invalidate(JWTAuth::getToken());
         return response()->json(['message' => 'Logout success']);
     }
 }
