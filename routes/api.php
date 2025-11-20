@@ -20,7 +20,7 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth.api')->group(function () {
         Route::get('/me', [AuthController::class, 'me']);
         Route::post('/logout', [AuthController::class, 'logout']);
-        Route::post('/profile/update', [\App\Http\Controllers\ProfileController::class, 'update']);
+        Route::post('/profile/update', [ProfileController::class, 'update']);
 
         // Cart management
         Route::get('/cart', [CartController::class, 'get']);
