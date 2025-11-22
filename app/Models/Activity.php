@@ -31,9 +31,9 @@ class Activity extends Model
             if (str_starts_with($value, 'http')) {
                 return $value;
             }
-            return url(\Illuminate\Support\Facades\Storage::url($value));
+            return url(\Illuminate\Support\Facades\Storage::url('public/activities/' . $value));
         }
-        
+
         // Jika kosong, return default image
         return url(\Illuminate\Support\Facades\Storage::url('public/pout.jpg'));
     }

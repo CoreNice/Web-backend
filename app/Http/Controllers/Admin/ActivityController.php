@@ -37,12 +37,13 @@ class ActivityController extends Controller
         $data = $validator->validated();
         $imagePath = null;
 
-        // Handle image upload
+        // Handle image upload - save with original filename (no prefix, no randomization)
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = 'activities/' . Str::random(20) . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('', $filename, 'public');
-            $imagePath = $path;
+            $originalName = $file->getClientOriginalName();
+            $filename = $originalName; // Use original filename without randomization
+            $path = $file->storeAs('activities', $filename, 'public');
+            $imagePath = $originalName; // Store only filename
         }
 
         $activity = Activity::create([
@@ -91,13 +92,17 @@ class ActivityController extends Controller
         // Handle image replacement
         if ($request->hasFile('image')) {
             // Delete old image if exists
-            if ($activity->image && Storage::disk('public')->exists($activity->image)) {
-                Storage::disk('public')->delete($activity->image);
+            if ($activity->image) {
+                $oldImagePath = 'activities/' . $activity->image;
+                if (Storage::disk('public')->exists($oldImagePath)) {
+                    Storage::disk('public')->delete($oldImagePath);
+                }
             }
             $file = $request->file('image');
-            $filename = 'activities/' . Str::random(20) . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('', $filename, 'public');
-            $data['image'] = $path;
+            $originalName = $file->getClientOriginalName();
+            $filename = $originalName; // Use original filename
+            $path = $file->storeAs('activities', $filename, 'public');
+            $data['image'] = $originalName; // Store only filename
         }
 
         $activity->fill($data);
@@ -113,8 +118,11 @@ class ActivityController extends Controller
         if (!$activity) return response()->json(['message' => 'Not found'], 404);
 
         // Delete image file
-        if ($activity->image && Storage::disk('public')->exists($activity->image)) {
-            Storage::disk('public')->delete($activity->image);
+        if ($activity->image) {
+            $imagePath = 'activities/' . $activity->image;
+            if (Storage::disk('public')->exists($imagePath)) {
+                Storage::disk('public')->delete($imagePath);
+            }
         }
 
         $activity->delete();
@@ -122,4 +130,3 @@ class ActivityController extends Controller
         return response()->json(['message' => 'Deleted']);
     }
 }
-
