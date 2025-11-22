@@ -22,9 +22,10 @@ class Activity extends Model
         'updated_at',
     ];
 
-    // Helper untuk mengembalikan public url (bila belum di-set)
-    public function getImageUrlAttribute($value)
+    // Helper untuk mengembalikan public url (bila belum di-set atau gunakan default)
+    public function getImageAttribute($value)
     {
+        // Jika ada nilai image, kembalikan URL
         if (!empty($value)) {
             // jika sudah absolute url, kembalikan langsung
             if (str_starts_with($value, 'http')) {
@@ -32,7 +33,9 @@ class Activity extends Model
             }
             return url(\Illuminate\Support\Facades\Storage::url($value));
         }
-        return null;
+        
+        // Jika kosong, return default image
+        return url(\Illuminate\Support\Facades\Storage::url('public/pout.jpg'));
     }
 
     // Auto-set timestamps
@@ -50,4 +53,3 @@ class Activity extends Model
         });
     }
 }
-

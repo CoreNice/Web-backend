@@ -27,7 +27,7 @@ class ActivityController extends Controller
             'date'        => 'required|string',
             'location'    => 'required|string|max:190',
             'status'      => 'required|in:upcoming,past',
-            'image'       => 'nullable|file|image|max:5120' // max 5MB
+            'image'       => 'nullable|file|image|max:5120' // max 5MB, optional
         ]);
 
         if ($validator->fails()) {
@@ -35,13 +35,14 @@ class ActivityController extends Controller
         }
 
         $data = $validator->validated();
+        $imagePath = null;
 
         // Handle image upload
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = 'activities/' . Str::random(20) . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs('', $filename, 'public');
-            $data['image'] = $path;
+            $imagePath = $path;
         }
 
         $activity = Activity::create([
@@ -50,7 +51,7 @@ class ActivityController extends Controller
             'date' => $data['date'],
             'location' => $data['location'],
             'status' => $data['status'],
-            'image' => $data['image'] ?? null,
+            'image' => $imagePath,
         ]);
 
         return response()->json($activity, 201);

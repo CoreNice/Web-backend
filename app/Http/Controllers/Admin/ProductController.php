@@ -27,7 +27,7 @@ class ProductController extends Controller
             'name'        => 'required|string|max:190',
             'price'       => 'required|numeric',
             'description' => 'required|string',
-            'image'       => 'nullable|file|image|max:5120' // max 5MB
+            'image'       => 'nullable|file|image|max:5120' // max 5MB, optional
         ]);
 
         if ($validator->fails()) {
@@ -35,6 +35,7 @@ class ProductController extends Controller
         }
 
         $data = $validator->validated();
+        $imagePath = null;
 
         // handle image upload
         if ($request->hasFile('image')) {
@@ -42,15 +43,14 @@ class ProductController extends Controller
             $filename = 'products/' . Str::random(20) . '.' . $file->getClientOriginalExtension();
             // simpan di disk 'public'
             $path = $file->storeAs('', $filename, 'public');
-            $data['image'] = $path;
-            // image_url akan dihasilkan oleh accessor
+            $imagePath = $path;
         }
 
         $product = Product::create([
             'name' => $data['name'],
             'price' => (float)$data['price'],
             'description' => $data['description'],
-            'image' => $data['image'] ?? null,
+            'image' => $imagePath,
         ]);
 
         return response()->json($product, 201);

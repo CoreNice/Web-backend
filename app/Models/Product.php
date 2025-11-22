@@ -14,7 +14,7 @@ class Product extends Model
         'name',
         'price',       // number (decimal/integer)
         'description',
-        'image',       // path di storage, mis: 'products/abc.jpg'
+        'image',       // path di storage, mis: 'products/abc.jpg' atau NULL
         'image_url',   // optional cached public url
         'created_at',
         'updated_at',
@@ -25,9 +25,10 @@ class Product extends Model
         'price' => 'float',
     ];
 
-    // Helper untuk mengembalikan public url (bila belum di-set)
-    public function getImageUrlAttribute($value)
+    // Helper untuk mengembalikan public url (bila belum di-set atau gunakan default)
+    public function getImageAttribute($value)
     {
+        // Jika ada nilai image, kembalikan URL
         if (!empty($value)) {
             // jika sudah absolute url, kembalikan langsung
             if (str_starts_with($value, 'http')) {
@@ -35,7 +36,9 @@ class Product extends Model
             }
             return url(\Illuminate\Support\Facades\Storage::url($value));
         }
-        return null;
+        
+        // Jika kosong, return default image
+        return url(\Illuminate\Support\Facades\Storage::url('public/pout.jpg'));
     }
 
     // Jika butuh slug:
