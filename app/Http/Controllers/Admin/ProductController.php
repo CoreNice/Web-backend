@@ -27,8 +27,8 @@ class ProductController extends Controller
             'name'        => 'required|string|max:190',
             'price'       => 'required|numeric',
             'description' => 'required|string',
-            'stock'       => 'required|integer|min:0', // Added stock validation
-            'image'       => 'nullable|file|image|max:5120' // max 5MB, optional
+            'stock'       => 'required|integer|min:0',
+            'image'       => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -39,14 +39,14 @@ class ProductController extends Controller
         $imagePath = null;
 
         // handle image upload - save with original filename (no prefix, no randomization)
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $originalName = $file->getClientOriginalName();
-            $filename = $originalName; // Use original filename without randomization
-            // simpan di disk 'public/products'
-            $path = $file->storeAs('products', $filename, 'public');
-            $imagePath = $originalName; // Store only filename
-        }
+        // if ($request->hasFile('image')) {
+        //     $file = $request->file('image');
+        //     $originalName = $file->getClientOriginalName();
+        //     $filename = $originalName; // Use original filename without randomization
+        //     // simpan di disk 'public/products'
+        //     $path = $file->storeAs('products', $filename, 'public');
+        //     $imagePath = $originalName; // Store only filename
+        // }
 
         $product = Product::create([
             'name' => $data['name'],
@@ -80,7 +80,7 @@ class ProductController extends Controller
             'price'       => 'sometimes|required|numeric',
             'description' => 'sometimes|required|string',
             'stock'       => 'sometimes|required|integer|min:0', // Added stock validation
-            'image'       => 'nullable|file|image|max:5120'
+            'image'       => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -90,20 +90,20 @@ class ProductController extends Controller
         $data = $validator->validated();
 
         // handle image replacement
-        if ($request->hasFile('image')) {
-            // hapus image lama jika ada
-            if ($product->image) {
-                $oldImagePath = 'products/' . $product->image;
-                if (Storage::disk('public')->exists($oldImagePath)) {
-                    Storage::disk('public')->delete($oldImagePath);
-                }
-            }
-            $file = $request->file('image');
-            $originalName = $file->getClientOriginalName();
-            $filename = $originalName; // Use original filename
-            $path = $file->storeAs('products', $filename, 'public');
-            $data['image'] = $originalName; // Store only filename
-        }
+        // if ($request->hasFile('image')) {
+        //     // hapus image lama jika ada
+        //     if ($product->image) {
+        //         $oldImagePath = 'products/' . $product->image;
+        //         if (Storage::disk('public')->exists($oldImagePath)) {
+        //             Storage::disk('public')->delete($oldImagePath);
+        //         }
+        //     }
+        //     $file = $request->file('image');
+        //     $originalName = $file->getClientOriginalName();
+        //     $filename = $originalName; // Use original filename
+        //     $path = $file->storeAs('products', $filename, 'public');
+        //     $data['image'] = $originalName; // Store only filename
+        // }
 
         $product->fill($data);
         $product->save();
@@ -118,12 +118,9 @@ class ProductController extends Controller
         if (!$product) return response()->json(['message' => 'Not found'], 404);
 
         // delete image file
-        if ($product->image) {
-            $imagePath = 'products/' . $product->image;
-            if (Storage::disk('public')->exists($imagePath)) {
-                Storage::disk('public')->delete($imagePath);
-            }
-        }
+        // if ($product->image && Storage::disk('public')->exists($product->image)) {
+        //     Storage::disk('public')->delete($product->image);
+        // }
 
         $product->delete();
 

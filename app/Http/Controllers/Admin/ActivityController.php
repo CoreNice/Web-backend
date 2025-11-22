@@ -27,7 +27,7 @@ class ActivityController extends Controller
             'date'        => 'required|string',
             'location'    => 'required|string|max:190',
             'status'      => 'required|in:upcoming,past',
-            'image'       => 'nullable|file|image|max:5120' // max 5MB, optional
+            'image'       => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -38,13 +38,13 @@ class ActivityController extends Controller
         $imagePath = null;
 
         // Handle image upload - save with original filename (no prefix, no randomization)
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $originalName = $file->getClientOriginalName();
-            $filename = $originalName; // Use original filename without randomization
-            $path = $file->storeAs('activities', $filename, 'public');
-            $imagePath = $originalName; // Store only filename
-        }
+        // if ($request->hasFile('image')) {
+        //     $file = $request->file('image');
+        //     $originalName = $file->getClientOriginalName();
+        //     $filename = $originalName; // Use original filename without randomization
+        //     $path = $file->storeAs('activities', $filename, 'public');
+        //     $imagePath = $originalName; // Store only filename
+        // }
 
         $activity = Activity::create([
             'title' => $data['title'],
@@ -80,7 +80,7 @@ class ActivityController extends Controller
             'date'        => 'sometimes|required|string',
             'location'    => 'sometimes|required|string|max:190',
             'status'      => 'sometimes|required|in:upcoming,past',
-            'image'       => 'nullable|file|image|max:5120'
+            'image'       => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
@@ -90,20 +90,20 @@ class ActivityController extends Controller
         $data = $validator->validated();
 
         // Handle image replacement
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($activity->image) {
-                $oldImagePath = 'activities/' . $activity->image;
-                if (Storage::disk('public')->exists($oldImagePath)) {
-                    Storage::disk('public')->delete($oldImagePath);
-                }
-            }
-            $file = $request->file('image');
-            $originalName = $file->getClientOriginalName();
-            $filename = $originalName; // Use original filename
-            $path = $file->storeAs('activities', $filename, 'public');
-            $data['image'] = $originalName; // Store only filename
-        }
+        // if ($request->hasFile('image')) {
+        //     // Delete old image if exists
+        //     if ($activity->image) {
+        //         $oldImagePath = 'activities/' . $activity->image;
+        //         if (Storage::disk('public')->exists($oldImagePath)) {
+        //             Storage::disk('public')->delete($oldImagePath);
+        //         }
+        //     }
+        //     $file = $request->file('image');
+        //     $originalName = $file->getClientOriginalName();
+        //     $filename = $originalName; // Use original filename
+        //     $path = $file->storeAs('activities', $filename, 'public');
+        //     $data['image'] = $originalName; // Store only filename
+        // }
 
         $activity->fill($data);
         $activity->save();

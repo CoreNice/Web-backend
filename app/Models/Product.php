@@ -16,7 +16,6 @@ class Product extends Model
         'description',
         'stock',       // number for inventory
         'image',       // filename in storage, mis: 'product-name.jpg' (no prefix)
-        'image_url',   // optional cached public url
         'created_at',
         'updated_at',
     ];
@@ -30,17 +29,18 @@ class Product extends Model
     // Helper untuk mengembalikan public url (bila belum di-set atau gunakan default)
     public function getImageAttribute($value)
     {
+        
         // Jika ada nilai image, kembalikan URL
-        if (!empty($value)) {
-            // jika sudah absolute url, kembalikan langsung
-            if (str_starts_with($value, 'http')) {
-                return $value;
-            }
-            return url(\Illuminate\Support\Facades\Storage::url('public/products/' . $value));
-        }
+        // if (!empty($value)) {
+        //     // jika sudah absolute url, kembalikan langsung
+        //     if (str_starts_with($value, 'http')) {
+        //         return $value;
+        //     }
+        //     return url(\Illuminate\Support\Facades\Storage::url($value));
+        // }
 
-        // Jika kosong, return default image
-        return url(\Illuminate\Support\Facades\Storage::url('public/pout.jpg'));
+        // // Jika kosong, return default image
+        // return url(\Illuminate\Support\Facades\Storage::url('public/pout.jpg'));
     }
 
     // Get status based on stock

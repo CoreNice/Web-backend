@@ -16,7 +16,6 @@ class Activity extends Model
         'date',
         'location',
         'image',
-        'image_url',
         'status', // 'upcoming' or 'past'
         'created_at',
         'updated_at',
@@ -25,17 +24,17 @@ class Activity extends Model
     // Helper untuk mengembalikan public url (bila belum di-set atau gunakan default)
     public function getImageAttribute($value)
     {
-        // Jika ada nilai image, kembalikan URL
-        if (!empty($value)) {
-            // jika sudah absolute url, kembalikan langsung
-            if (str_starts_with($value, 'http')) {
-                return $value;
-            }
-            return url(\Illuminate\Support\Facades\Storage::url('public/activities/' . $value));
-        }
+        // // Jika ada nilai image, kembalikan URL
+        // if (!empty($value)) {
+        //     // jika sudah absolute url, kembalikan langsung
+        //     if (str_starts_with($value, 'http')) {
+        //         return $value;
+        //     }
+        //     return url(\Illuminate\Support\Facades\Storage::url($value));
+        // }
 
-        // Jika kosong, return default image
-        return url(\Illuminate\Support\Facades\Storage::url('public/pout.jpg'));
+        // // Jika kosong, return default image
+        // return url(\Illuminate\Support\Facades\Storage::url('public/pout.jpg'));
     }
 
     // Auto-set timestamps
