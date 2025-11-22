@@ -5,34 +5,43 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CartController extends Controller
 {
-    public function get()
+    public function get(Request $request)
     {
-        $user = JWTAuth::user();
-        return Cart::firstOrCreate(['user_id' => $user->_id]);
-    }
+        $user = $request->auth_user;
 
-    public function update(Request $request)
-    {
-        $user = JWTAuth::user();
+        $cart = Cart::where('user_id', $user->_id)->first();
 
-        $cart = Cart::firstOrCreate(['user_id' => $user->_id]);
-        $cart->items = $request->items;
-        $cart->save();
+        if (!$cart) {
+            return response()->json(['user_id' => $user->_id, 'items' => []]);
+        }
 
         return response()->json($cart);
     }
 
-    public function clear()
+    public function update(Request $request)
     {
-        $user = JWTAuth::user();
+        $user = $request->auth_user;
 
-        $cart = Cart::firstOrCreate(['user_id' => $user->_id]);
-        $cart->items = [];
-        $cart->save();
+        $validated = $request->validate([
+            'items' => 'required|array',
+        ]);
+
+        $cart = Cart::updateOrCreate(
+            ['user_id' => $user->_id],
+            ['items' => $validated['items']]
+        );
+
+        return response()->json($cart);
+    }
+
+    public function clear(Request $request)
+    {
+        $user = $request->auth_user;
+
+        Cart::where('user_id', $user->_id)->delete();
 
         return response()->json(['message' => 'Cart cleared']);
     }

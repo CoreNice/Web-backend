@@ -38,16 +38,6 @@ class ProductController extends Controller
         $data = $validator->validated();
         $imagePath = null;
 
-        // handle image upload - save with original filename (no prefix, no randomization)
-        // if ($request->hasFile('image')) {
-        //     $file = $request->file('image');
-        //     $originalName = $file->getClientOriginalName();
-        //     $filename = $originalName; // Use original filename without randomization
-        //     // simpan di disk 'public/products'
-        //     $path = $file->storeAs('products', $filename, 'public');
-        //     $imagePath = $originalName; // Store only filename
-        // }
-
         $product = Product::create([
             'name' => $data['name'],
             'price' => (float)$data['price'],
@@ -88,22 +78,6 @@ class ProductController extends Controller
         }
 
         $data = $validator->validated();
-
-        // handle image replacement
-        // if ($request->hasFile('image')) {
-        //     // hapus image lama jika ada
-        //     if ($product->image) {
-        //         $oldImagePath = 'products/' . $product->image;
-        //         if (Storage::disk('public')->exists($oldImagePath)) {
-        //             Storage::disk('public')->delete($oldImagePath);
-        //         }
-        //     }
-        //     $file = $request->file('image');
-        //     $originalName = $file->getClientOriginalName();
-        //     $filename = $originalName; // Use original filename
-        //     $path = $file->storeAs('products', $filename, 'public');
-        //     $data['image'] = $originalName; // Store only filename
-        // }
 
         // Ensure image field uses submitted image string when provided
         if (isset($data['image'])) {

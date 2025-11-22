@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HealthController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\FavoriteController;
 
 Route::prefix('v1')->group(function () {
     Route::get('/mongodb', [HealthController::class, 'database']);
@@ -27,6 +28,11 @@ Route::prefix('v1')->group(function () {
         Route::get('/cart', [CartController::class, 'get']);
         Route::post('/cart', [CartController::class, 'update']);
         Route::delete('/cart', [CartController::class, 'clear']);
+
+        // Favorites management
+        Route::get('/favorites', [FavoriteController::class, 'get']);
+        Route::post('/favorites', [FavoriteController::class, 'add']);
+        Route::delete('/favorites', [FavoriteController::class, 'remove']);
 
         // Order management
         Route::post('/orders', [OrderController::class, 'create']);

@@ -37,15 +37,6 @@ class ActivityController extends Controller
         $data = $validator->validated();
         $imagePath = null;
 
-        // Handle image upload - save with original filename (no prefix, no randomization)
-        // if ($request->hasFile('image')) {
-        //     $file = $request->file('image');
-        //     $originalName = $file->getClientOriginalName();
-        //     $filename = $originalName; // Use original filename without randomization
-        //     $path = $file->storeAs('activities', $filename, 'public');
-        //     $imagePath = $originalName; // Store only filename
-        // }
-
         $activity = Activity::create([
             'title' => $data['title'],
             'description' => $data['description'],
@@ -88,23 +79,6 @@ class ActivityController extends Controller
         }
 
         $data = $validator->validated();
-
-        // Ensure image field uses submitted image string when provided
-        // if ($request->hasFile('image')) {
-        //     // Delete old image if exists
-        //     if ($activity->image) {
-        //         $oldImagePath = 'activities/' . $activity->image;
-        //         if (Storage::disk('public')->exists($oldImagePath)) {
-        //             Storage::disk('public')->delete($oldImagePath);
-        //         }
-        //     }
-        //     $file = $request->file('image');
-        //     $originalName = $file->getClientOriginalName();
-        //     $filename = $originalName; // Use original filename
-        //     $path = $file->storeAs('activities', $filename, 'public');
-        //     $data['image'] = $originalName; // Store only filename
-        // }
-
         if (isset($data['image'])) {
             $activity->image = $data['image'];
         }
