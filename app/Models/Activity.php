@@ -24,17 +24,19 @@ class Activity extends Model
     // Helper untuk mengembalikan public url (bila belum di-set atau gunakan default)
     public function getImageAttribute($value)
     {
-        // // Jika ada nilai image, kembalikan URL
-        // if (!empty($value)) {
-        //     // jika sudah absolute url, kembalikan langsung
-        //     if (str_starts_with($value, 'http')) {
-        //         return $value;
-        //     }
-        //     return url(\Illuminate\Support\Facades\Storage::url($value));
-        // }
+        if (!empty($value)) {
+            if (str_starts_with($value, 'http')) {
+                return $value;
+            }
 
-        // // Jika kosong, return default image
-        // return url(\Illuminate\Support\Facades\Storage::url('public/pout.jpg'));
+            try {
+                return url(\Illuminate\Support\Facades\Storage::url($value));
+            } catch (\Throwable $e) {
+                return $value;
+            }
+        }
+
+        return 'https://via.placeholder.com/800x450?text=No+Image';
     }
 
     // Auto-set timestamps

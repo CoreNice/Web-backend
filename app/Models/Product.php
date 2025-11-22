@@ -29,18 +29,22 @@ class Product extends Model
     // Helper untuk mengembalikan public url (bila belum di-set atau gunakan default)
     public function getImageAttribute($value)
     {
-        
-        // Jika ada nilai image, kembalikan URL
-        // if (!empty($value)) {
-        //     // jika sudah absolute url, kembalikan langsung
-        //     if (str_starts_with($value, 'http')) {
-        //         return $value;
-        //     }
-        //     return url(\Illuminate\Support\Facades\Storage::url($value));
-        // }
+        // If value is set and already a full URL, return it
+        if (!empty($value)) {
+            if (str_starts_with($value, 'http')) {
+                return $value;
+            }
 
-        // // Jika kosong, return default image
-        // return url(\Illuminate\Support\Facades\Storage::url('public/pout.jpg'));
+            // If it's a stored path or filename, attempt to build a public storage URL
+            try {
+                return url(\Illuminate\Support\Facades\Storage::url($value));
+            } catch (\Throwable $e) {
+                return $value;
+            }
+        }
+
+        // If empty, return a simple placeholder image URL
+        return 'https://via.placeholder.com/600x400?text=No+Image';
     }
 
     // Get status based on stock

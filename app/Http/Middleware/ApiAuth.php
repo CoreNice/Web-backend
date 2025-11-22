@@ -15,7 +15,8 @@ class ApiAuth
         }
 
         $token = substr($auth, 7);
-        $user = User::where('api_tokens', $token)->first();
+        // Use helper that abstracts token lookup
+        $user = User::findByToken($token);
 
         if (!$user) {
             return response()->json(['message' => 'Invalid token'], 401);

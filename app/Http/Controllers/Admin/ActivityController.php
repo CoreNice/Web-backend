@@ -52,7 +52,7 @@ class ActivityController extends Controller
             'date' => $data['date'],
             'location' => $data['location'],
             'status' => $data['status'],
-            'image' => $imagePath,
+            'image' => $data['image'] ?? $imagePath,
         ]);
 
         return response()->json($activity, 201);
@@ -89,7 +89,7 @@ class ActivityController extends Controller
 
         $data = $validator->validated();
 
-        // Handle image replacement
+        // Ensure image field uses submitted image string when provided
         // if ($request->hasFile('image')) {
         //     // Delete old image if exists
         //     if ($activity->image) {
@@ -104,6 +104,10 @@ class ActivityController extends Controller
         //     $path = $file->storeAs('activities', $filename, 'public');
         //     $data['image'] = $originalName; // Store only filename
         // }
+
+        if (isset($data['image'])) {
+            $activity->image = $data['image'];
+        }
 
         $activity->fill($data);
         $activity->save();

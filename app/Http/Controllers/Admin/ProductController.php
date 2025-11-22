@@ -53,7 +53,7 @@ class ProductController extends Controller
             'price' => (float)$data['price'],
             'description' => $data['description'],
             'stock' => (int)$data['stock'],
-            'image' => $imagePath,
+            'image' => $data['image'] ?? $imagePath,
         ]);
 
         return response()->json($product, 201);
@@ -104,6 +104,11 @@ class ProductController extends Controller
         //     $path = $file->storeAs('products', $filename, 'public');
         //     $data['image'] = $originalName; // Store only filename
         // }
+
+        // Ensure image field uses submitted image string when provided
+        if (isset($data['image'])) {
+            $product->image = $data['image'];
+        }
 
         $product->fill($data);
         $product->save();
