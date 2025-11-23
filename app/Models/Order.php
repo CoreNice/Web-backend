@@ -23,4 +23,9 @@ class Order extends Model
         'items' => 'array',
         'customer' => 'array'
     ];
+
+    protected $attributes = [
+        'status' => 'pending'
+    ];
 }
+

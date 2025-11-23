@@ -39,7 +39,7 @@ class SupplierController extends Controller
     public function show($id)
     {
         $supplier = Supplier::find($id);
-        
+
         if (!$supplier) {
             return response()->json(['message' => 'Supplier not found'], 404);
         }
@@ -51,7 +51,7 @@ class SupplierController extends Controller
     public function update(Request $request, $id)
     {
         $supplier = Supplier::find($id);
-        
+
         if (!$supplier) {
             return response()->json(['message' => 'Supplier not found'], 404);
         }
@@ -80,7 +80,7 @@ class SupplierController extends Controller
     public function destroy($id)
     {
         $supplier = Supplier::find($id);
-        
+
         if (!$supplier) {
             return response()->json(['message' => 'Supplier not found'], 404);
         }

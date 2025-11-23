@@ -22,9 +22,12 @@ class OrderController extends Controller
             'customer.email' => 'required|email',
             'customer.phone' => 'required|string|digits_between:10,15',
             'customer.method' => 'required|in:pickup,delivery',
-            'customer.address' => 'nullable|string',
-            'customer.notes' => 'nullable|string|max:128',
+            'customer.address' => 'nullable|string|max:50',
+            'customer.notes' => 'nullable|string|max:50',
         ]);
+
+        // Determine initial status based on method
+        $status = $validated['customer']['method'] === 'pickup' ? 'pickup' : 'delivery';
 
         $order = Order::create([
             'user_id' => $user->_id,
@@ -33,7 +36,7 @@ class OrderController extends Controller
             'shipping_cost' => $validated['shipping_cost'],
             'total' => $validated['total'],
             'customer' => $validated['customer'],
-            'status' => 'pending',
+            'status' => $status,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

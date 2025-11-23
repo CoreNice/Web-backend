@@ -68,5 +68,13 @@ Route::prefix('v1')->group(function () {
         Route::get('/suppliers/{id}', [SupplierController::class, 'show']);
         Route::post('/suppliers/{id}', [SupplierController::class, 'update']);
         Route::delete('/suppliers/{id}', [SupplierController::class, 'destroy']);
+
+        // admin order management
+        Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index']);
+        Route::get('/orders/status/{status}', [\App\Http\Controllers\Admin\OrderController::class, 'getByStatus']);
+        Route::post('/orders/{id}/finish', [\App\Http\Controllers\Admin\OrderController::class, 'finish']);
+        Route::post('/orders/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus']);
+        Route::delete('/orders/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'destroy']);
+        Route::get('/orders/statistics', [\App\Http\Controllers\Admin\OrderController::class, 'statistics']);
     });
 });
