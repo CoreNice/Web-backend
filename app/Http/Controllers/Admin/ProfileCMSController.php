@@ -55,14 +55,8 @@ class ProfileCMSController extends Controller
 
     public function update(Request $request, $id)
     {
-        try {
-            // Convert string ID to MongoDB ObjectId if needed
-            $objectId = new ObjectId($id);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Invalid ID format'], 400);
-        }
-
-        $division = ProfileCMS::where('_id', $objectId)->first();
+        // Find by id directly; Eloquent will handle ID mapping for MongoDB package
+        $division = ProfileCMS::find($id);
         if (!$division) {
             return response()->json(['message' => 'Not found'], 404);
         }
@@ -90,14 +84,8 @@ class ProfileCMSController extends Controller
 
     public function destroy($id)
     {
-        try {
-            // Convert string ID to MongoDB ObjectId if needed
-            $objectId = new ObjectId($id);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Invalid ID format'], 400);
-        }
-
-        $division = ProfileCMS::where('_id', $objectId)->first();
+        // Find by id directly; Eloquent will handle ID mapping for MongoDB package
+        $division = ProfileCMS::find($id);
         if (!$division) {
             return response()->json(['message' => 'Not found'], 404);
         }
