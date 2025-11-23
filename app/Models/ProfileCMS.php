@@ -25,6 +25,11 @@ class ProfileCMS extends Model
         'updated_at' => 'datetime',
     ];
 
+    public function getKeyName()
+    {
+        return '_id';
+    }
+
     public function getImageAttribute($value)
     {
         if (!empty($value)) {

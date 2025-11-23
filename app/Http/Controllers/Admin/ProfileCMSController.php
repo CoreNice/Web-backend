@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ProfileCMS;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use MongoDB\BSON\ObjectId;
 
 class ProfileCMSController extends Controller
 {
@@ -54,7 +55,14 @@ class ProfileCMSController extends Controller
 
     public function update(Request $request, $id)
     {
-        $division = ProfileCMS::find($id);
+        try {
+            // Convert string ID to MongoDB ObjectId if needed
+            $objectId = new ObjectId($id);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Invalid ID format'], 400);
+        }
+
+        $division = ProfileCMS::where('_id', $objectId)->first();
         if (!$division) {
             return response()->json(['message' => 'Not found'], 404);
         }
@@ -82,7 +90,14 @@ class ProfileCMSController extends Controller
 
     public function destroy($id)
     {
-        $division = ProfileCMS::find($id);
+        try {
+            // Convert string ID to MongoDB ObjectId if needed
+            $objectId = new ObjectId($id);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Invalid ID format'], 400);
+        }
+
+        $division = ProfileCMS::where('_id', $objectId)->first();
         if (!$division) {
             return response()->json(['message' => 'Not found'], 404);
         }
