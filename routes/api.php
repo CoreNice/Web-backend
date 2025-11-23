@@ -6,13 +6,14 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\HealthController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\FavoriteController;
 
 Route::prefix('v1')->group(function () {
-    Route::get('/mongodb', [HealthController::class, 'database']);
+    Route::get('/health/db', [HealthController::class, 'database']);
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/registerAdmin', [AuthController::class, 'registerAdmin']);
     Route::post('/login', [AuthController::class, 'login']);
@@ -60,5 +61,12 @@ Route::prefix('v1')->group(function () {
         Route::get('/users/{id}', [UserController::class, 'show']);
         Route::post('/users/{id}', [UserController::class, 'update']);
         Route::delete('/users/{id}', [UserController::class, 'destroy']);
+
+        // admin supplier management
+        Route::get('/suppliers', [SupplierController::class, 'index']);
+        Route::post('/suppliers', [SupplierController::class, 'store']);
+        Route::get('/suppliers/{id}', [SupplierController::class, 'show']);
+        Route::post('/suppliers/{id}', [SupplierController::class, 'update']);
+        Route::delete('/suppliers/{id}', [SupplierController::class, 'destroy']);
     });
 });
