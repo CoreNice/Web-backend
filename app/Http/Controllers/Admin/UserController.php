@@ -8,14 +8,12 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    // GET ALL USERS
     public function index()
     {
         $users = User::all(['_id', 'name', 'email', 'role', 'avatarUrl', 'created_at']);
         return response()->json($users);
     }
 
-    // GET SINGLE USER
     public function show($id)
     {
         $user = User::find($id);
@@ -27,7 +25,6 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    // UPDATE USER (including role)
     public function update(Request $request, $id)
     {
         $user = User::find($id);
@@ -50,7 +47,6 @@ class UserController extends Controller
             $user->email = strtolower($request->email);
         }
 
-        // Allow role update - this is the key fix!
         if ($request->has('role')) {
             $user->role = $request->role;
         }
@@ -63,7 +59,6 @@ class UserController extends Controller
         ]);
     }
 
-    // DELETE USER
     public function destroy($id)
     {
         $user = User::find($id);

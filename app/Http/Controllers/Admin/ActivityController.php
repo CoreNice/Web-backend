@@ -11,14 +11,12 @@ use Illuminate\Support\Facades\Validator;
 
 class ActivityController extends Controller
 {
-    // List all activities for admin
     public function index()
     {
         $activities = Activity::orderBy('created_at', 'desc')->get();
         return response()->json($activities);
     }
 
-    // Store new activity (multipart/form-data support)
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -49,7 +47,6 @@ class ActivityController extends Controller
         return response()->json($activity, 201);
     }
 
-    // Show single activity
     public function show($id)
     {
         $activity = Activity::find($id);
@@ -59,7 +56,6 @@ class ActivityController extends Controller
         return response()->json($activity);
     }
 
-    // Update activity (multipart/form-data)
     public function update(Request $request, $id)
     {
         $activity = Activity::find($id);
@@ -89,7 +85,6 @@ class ActivityController extends Controller
         return response()->json($activity);
     }
 
-    // Delete activity
     public function destroy($id)
     {
         $activity = Activity::find($id);

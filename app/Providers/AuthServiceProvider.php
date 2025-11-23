@@ -23,12 +23,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        // OPTIONAL: validate token on every request automatically
-        // Ensures the user model loads correctly from MongoDB
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (\Exception $e) {
-            // Ignore if no token in request
         }
     }
 }

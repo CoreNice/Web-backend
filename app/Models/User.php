@@ -24,7 +24,6 @@ class User extends Authenticatable
 
     protected $hidden = ['password', 'api_tokens'];
 
-    // Generate API Token
     public function generateApiToken()
     {
         $token = Str::random(64);
@@ -38,7 +37,6 @@ class User extends Authenticatable
         return $token;
     }
 
-    // Revoke current token
     public function revokeToken($token)
     {
         $tokens = $this->api_tokens ?? [];

@@ -3,22 +3,26 @@
 namespace App\Models;
 
 use MongoDB\Laravel\Eloquent\Model;
-use Illuminate\Support\Str;
 
-class Activity extends Model
+class ProfileCMS extends Model
 {
     protected $connection = 'mongodb';
-    protected $collection = 'activities';
+    protected $collection = 'profile_cms';
 
     protected $fillable = [
-        'title',
+        'name',
         'description',
-        'date',
-        'location',
+        'longDescription',
+        'icon',
+        'color',
         'image',
-        'status',
-        'created_at',
-        'updated_at',
+        'order',
+    ];
+
+    protected $casts = [
+        'order' => 'integer',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function getImageAttribute($value)
@@ -35,7 +39,7 @@ class Activity extends Model
             }
         }
 
-        return 'https://via.placeholder.com/800x450?text=No+Image';
+        return null;
     }
 
     public static function booted()

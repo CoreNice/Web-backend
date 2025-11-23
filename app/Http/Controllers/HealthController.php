@@ -10,7 +10,6 @@ class HealthController extends Controller
     public function database(): JsonResponse
     {
         try {
-            // Coba ambil list collections untuk memastikan koneksi berfungsi
             $db = DB::connection('mongodb')->getMongoDB();
             $collections = $db->listCollections();
 

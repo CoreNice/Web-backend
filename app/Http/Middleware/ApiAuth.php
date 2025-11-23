@@ -15,16 +15,13 @@ class ApiAuth
         }
 
         $token = substr($auth, 7);
-        // Use helper that abstracts token lookup
         $user = User::findByToken($token);
 
         if (!$user) {
             return response()->json(['message' => 'Invalid token'], 401);
         }
 
-        // injeksikan user ke request
         $request->request->set('auth_user', $user);
-        // optional set user to $request->user() as well:
         $request->setUserResolver(fn() => $user);
 
         return $next($request);

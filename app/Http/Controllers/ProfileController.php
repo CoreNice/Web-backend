@@ -8,7 +8,6 @@ use Illuminate\Support\Str;
 
 class ProfileController extends Controller
 {
-    // Update user profile
     public function update(Request $request)
     {
         $user = $request->user();
@@ -17,12 +16,10 @@ class ProfileController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        // Update name if provided
         if ($request->has('name') && $request->name) {
             $user->name = $request->name;
         }
 
-        // Handle avatar URL directly (from Supabase or similar)
         if ($request->has('avatarUrl') && $request->avatarUrl) {
             $user->avatarUrl = $request->avatarUrl;
         }

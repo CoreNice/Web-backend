@@ -18,7 +18,6 @@ class Supplier extends Model
         'updated_at',
     ];
 
-    // Auto-set timestamps
     public static function booted()
     {
         static::creating(function ($model) {

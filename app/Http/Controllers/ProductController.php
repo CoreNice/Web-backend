@@ -18,7 +18,7 @@ class ProductController extends Controller
             'name'        => 'required|string|max:100',
             'price'       => 'required|numeric',
             'description' => 'required|string',
-            'image'       => 'required|string', // URL disimpan, upload terpisah
+            'image'       => 'required|string',
         ]);
 
         $product = Product::create($validated);

@@ -9,14 +9,12 @@ use Illuminate\Support\Facades\Validator;
 
 class SupplierController extends Controller
 {
-    // GET ALL SUPPLIERS
     public function index()
     {
         $suppliers = Supplier::orderBy('created_at', 'desc')->get();
         return response()->json($suppliers);
     }
 
-    // CREATE SUPPLIER
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -35,7 +33,6 @@ class SupplierController extends Controller
         return response()->json($supplier, 201);
     }
 
-    // GET SINGLE SUPPLIER
     public function show($id)
     {
         $supplier = Supplier::find($id);
@@ -47,7 +44,6 @@ class SupplierController extends Controller
         return response()->json($supplier);
     }
 
-    // UPDATE SUPPLIER
     public function update(Request $request, $id)
     {
         $supplier = Supplier::find($id);
@@ -76,7 +72,6 @@ class SupplierController extends Controller
         ]);
     }
 
-    // DELETE SUPPLIER
     public function destroy($id)
     {
         $supplier = Supplier::find($id);

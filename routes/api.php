@@ -3,14 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfileCMSController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\HealthController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\FavoriteController;
 
 Route::prefix('v1')->group(function () {
     Route::get('/health/db', [HealthController::class, 'database']);
@@ -19,26 +17,13 @@ Route::prefix('v1')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/products', [\App\Http\Controllers\ProductController::class, 'index']);
     Route::get('/activities', [\App\Http\Controllers\ActivityController::class, 'index']);
+    Route::get('/profile-cms', [ProfileCMSController::class, 'index']);
+    Route::get('/profile-cms/{id}', [ProfileCMSController::class, 'show']);
 
     Route::middleware('auth.api')->group(function () {
         Route::get('/me', [AuthController::class, 'me']);
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::post('/profile/update', [ProfileController::class, 'update']);
-
-        // Cart management
-        Route::get('/cart', [CartController::class, 'get']);
-        Route::post('/cart', [CartController::class, 'update']);
-        Route::delete('/cart', [CartController::class, 'clear']);
-
-        // Favorites management
-        Route::get('/favorites', [FavoriteController::class, 'get']);
-        Route::post('/favorites', [FavoriteController::class, 'add']);
-        Route::delete('/favorites', [FavoriteController::class, 'remove']);
-
-        // Order management
-        Route::post('/orders', [OrderController::class, 'create']);
-        Route::get('/orders', [OrderController::class, 'index']);
-        Route::get('/orders/{id}', [OrderController::class, 'show']);
     });
 
     // admin product management (butuh token + admin role)
@@ -69,12 +54,11 @@ Route::prefix('v1')->group(function () {
         Route::post('/suppliers/{id}', [SupplierController::class, 'update']);
         Route::delete('/suppliers/{id}', [SupplierController::class, 'destroy']);
 
-        // admin order management
-        Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index']);
-        Route::get('/orders/status/{status}', [\App\Http\Controllers\Admin\OrderController::class, 'getByStatus']);
-        Route::post('/orders/{id}/finish', [\App\Http\Controllers\Admin\OrderController::class, 'finish']);
-        Route::post('/orders/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus']);
-        Route::delete('/orders/{id}', [\App\Http\Controllers\Admin\OrderController::class, 'destroy']);
-        Route::get('/orders/statistics', [\App\Http\Controllers\Admin\OrderController::class, 'statistics']);
+        // admin profile cms management
+        Route::get('/profile-cms', [\App\Http\Controllers\Admin\ProfileCMSController::class, 'index']);
+        Route::post('/profile-cms', [\App\Http\Controllers\Admin\ProfileCMSController::class, 'store']);
+        Route::get('/profile-cms/{id}', [\App\Http\Controllers\Admin\ProfileCMSController::class, 'show']);
+        Route::post('/profile-cms/{id}', [\App\Http\Controllers\Admin\ProfileCMSController::class, 'update']);
+        Route::delete('/profile-cms/{id}', [\App\Http\Controllers\Admin\ProfileCMSController::class, 'destroy']);
     });
 });

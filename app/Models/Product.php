@@ -12,30 +12,26 @@ class Product extends Model
 
     protected $fillable = [
         'name',
-        'price',       // number (decimal/integer)
+        'price',      
         'description',
-        'stock',       // number for inventory
-        'image',       // filename in storage, mis: 'product-name.jpg' (no prefix)
+        'stock',       
+        'image',      
         'created_at',
         'updated_at',
     ];
 
-    // Cast price and stock to numeric types
     protected $casts = [
         'price' => 'float',
         'stock' => 'integer',
     ];
 
-    // Helper untuk mengembalikan public url (bila belum di-set atau gunakan default)
     public function getImageAttribute($value)
     {
-        // If value is set and already a full URL, return it
         if (!empty($value)) {
             if (str_starts_with($value, 'http')) {
                 return $value;
             }
 
-            // If it's a stored path or filename, attempt to build a public storage URL
             try {
                 return url(\Illuminate\Support\Facades\Storage::url($value));
             } catch (\Throwable $e) {
@@ -43,17 +39,14 @@ class Product extends Model
             }
         }
 
-        // If empty, return a simple placeholder image URL
         return 'https://via.placeholder.com/600x400?text=No+Image';
     }
 
-    // Get status based on stock
     public function getStatusAttribute()
     {
         return ($this->stock ?? 0) > 0 ? 'available' : 'out of stock';
     }
 
-    // Auto-set timestamps
     public static function booted()
     {
         static::creating(function ($model) {
