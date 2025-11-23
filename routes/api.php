@@ -60,5 +60,11 @@ Route::prefix('v1')->group(function () {
         Route::get('/profile-cms/{id}', [\App\Http\Controllers\Admin\ProfileCMSController::class, 'show']);
         Route::post('/profile-cms/{id}', [\App\Http\Controllers\Admin\ProfileCMSController::class, 'update']);
         Route::delete('/profile-cms/{id}', [\App\Http\Controllers\Admin\ProfileCMSController::class, 'destroy']);
+
+        // admin site settings (simple key/value store)
+        Route::get('/site-settings', [\App\Http\Controllers\Admin\SiteSettingController::class, 'index']);
+        Route::get('/site-settings/{key}', [\App\Http\Controllers\Admin\SiteSettingController::class, 'show']);
+        Route::post('/site-settings/{key}', [\App\Http\Controllers\Admin\SiteSettingController::class, 'update']);
+        Route::delete('/site-settings/{key}', [\App\Http\Controllers\Admin\SiteSettingController::class, 'destroy']);
     });
 });
