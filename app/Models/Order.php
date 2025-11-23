@@ -28,4 +28,3 @@ class Order extends Model
         'status' => 'pending'
     ];
 }
-

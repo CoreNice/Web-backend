@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\ApiAuth;
 use App\Http\Middleware\EnsureAdmin;
+use App\Http\Middleware\CorsMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,12 +15,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Apply CORS middleware globally to all routes
+        $middleware->append(CorsMiddleware::class);
 
         // --- DAFTAR ROUTE MIDDLEWARE (pengganti Kernel.php) ---
         $middleware->alias([
             'auth.api' => ApiAuth::class,
             'admin'    => EnsureAdmin::class,
-
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
