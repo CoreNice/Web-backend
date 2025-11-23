@@ -32,7 +32,7 @@ class ProfileCMSController extends Controller
         }
 
         $data = $validator->validated();
-        
+
         // Get the next order if not provided
         if (!isset($data['order'])) {
             $data['order'] = ProfileCMS::max('order') + 1 ?? 0;
