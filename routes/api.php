@@ -20,6 +20,10 @@ Route::prefix('v1')->group(function () {
     Route::get('/profile-cms', [ProfileCMSController::class, 'index']);
     Route::get('/profile-cms/{id}', [ProfileCMSController::class, 'show']);
 
+    // Public site-settings (allow public pages to fetch current background images)
+    Route::get('/site-settings', [\App\Http\Controllers\Admin\SiteSettingController::class, 'index']);
+    Route::get('/site-settings/{key}', [\App\Http\Controllers\Admin\SiteSettingController::class, 'show']);
+
     Route::middleware('auth.api')->group(function () {
         Route::get('/me', [AuthController::class, 'me']);
         Route::post('/logout', [AuthController::class, 'logout']);
