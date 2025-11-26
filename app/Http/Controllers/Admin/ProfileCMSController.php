@@ -34,7 +34,6 @@ class ProfileCMSController extends Controller
 
         $data = $validator->validated();
 
-        // Get the next order if not provided
         if (!isset($data['order'])) {
             $data['order'] = ProfileCMS::max('order') + 1 ?? 0;
         }
@@ -55,7 +54,6 @@ class ProfileCMSController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Find by id directly; Eloquent will handle ID mapping for MongoDB package
         $division = ProfileCMS::find($id);
         if (!$division) {
             return response()->json(['message' => 'Not found'], 404);
@@ -84,7 +82,6 @@ class ProfileCMSController extends Controller
 
     public function destroy($id)
     {
-        // Find by id directly; Eloquent will handle ID mapping for MongoDB package
         $division = ProfileCMS::find($id);
         if (!$division) {
             return response()->json(['message' => 'Not found'], 404);

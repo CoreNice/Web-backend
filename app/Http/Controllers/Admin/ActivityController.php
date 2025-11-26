@@ -90,7 +90,6 @@ class ActivityController extends Controller
         $activity = Activity::find($id);
         if (!$activity) return response()->json(['message' => 'Not found'], 404);
 
-        // Delete image file
         if ($activity->image) {
             $imagePath = 'activities/' . $activity->image;
             if (Storage::disk('public')->exists($imagePath)) {
